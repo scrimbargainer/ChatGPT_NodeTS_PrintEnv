@@ -6,7 +6,7 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 
 function shellArch(): string {
   try {
-    return execSync("arch").toString().trim();
+    return execSync("uname -m").toString().trim();
   } catch {
     return "(arch failed)";
   }
