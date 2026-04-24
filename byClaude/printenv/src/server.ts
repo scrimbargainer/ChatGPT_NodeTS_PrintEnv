@@ -13,11 +13,11 @@ function shellArch(): string {
 }
 
 function collectEnv(showAll: boolean): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(process.env as Record<string, string>).filter(
-      ([k]) => showAll || !/secre/i.test(k)
-    )
-  );
+  const result: Record<string, string> = {};
+  for (const [k, v] of Object.entries(process.env as Record<string, string>)) {
+    if (showAll || !/secre/i.test(k)) result[k] = v;
+  }
+  return result;
 }
 
 const server = http.createServer((req, res) => {
