@@ -1,3 +1,18 @@
+/*
+ * TSP: target ES2017, module CommonJS.
+ *
+ * Before compiling, add a companion .d.ts tab containing the following
+ * declaration files from @types/node@18 (eg via unpkg&#x3A;//unpkg.com/@types/node@18/):
+ *
+ *   globals.d.ts          — process, Buffer, NodeJS namespace
+ *   http.d.ts             — http.createServer, IncomingMessage, ServerResponse
+ *   os.d.ts               — os.hostname, os.platform, os.uptime
+ *   child_process.d.ts    — execSync
+ *
+ * Note: http.d.ts pulls in stream, net, url, tls etc — paste those too if
+ * the checker complains.  URL is provided by the TSP dom lib; no extra decl needed.
+ */
+
 import * as http from "http";
 import * as os from "os";
 import { execSync } from "child_process";
