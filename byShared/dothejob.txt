@@ -1,0 +1,213 @@
+#!/bin/sh
+######### // This line added on first commit to byShared in ChatGPT_NodeTS_PrintEnv // Rest is dragged-over from old Chess960 repo to show how PDF'd binaries get CGI'd from BusyBox httpd
+#   #   #
+#########
+
+#
+#cd /lib
+#ln -s /etc/secrets/lib*db*.so.*   #TODO= (JUST) LOSE= both
+
+cd /
+mkdir ./root 2>/dev/null
+mkdir ./home 2>/dev/null
+cd /home
+ln -s /etc/secrets .
+cd /root
+ln -s /etc/secrets .
+cd ~
+cd ./root 2>/dev/null
+realpath .
+ls -l
+realpath .
+echo 'OK...'
+sleep 2
+
+#echo 'quit' | ./sjeng
+#rm -f ./?tstrapc.pdf
+#rm -f ./eraseme?.???
+#wget 'https://static.wikitide.net/rrfwiki/6/63/Btstrapc.pdf'   #TODO= (JUST) LOSE= all
+
+wget 'https://rawcdn.githack.com/Markworthy-37260/Next0v1.js/1c61477adf880fa9d495f109fa66025bd568fbfc/public/eraseme~.pdf'
+cat ./eraseme~.pdf \
+ | egrep '^\(~[^ ()\\]*~\)[ \t]+ Tj$' | tee ./eraseme6.txt \
+ | tr ' ' '\t' | cut -f1 | tr -d '()' | tee ./eraseme7.txt \
+ | tr '~' ' ' | sed 's/^ *//' | sed 's/ *$//' | tee ./eraseme8.txt \
+ | tr '{|}' '(\\)' | tee ./eraseme9.txt \
+ | uudecode
+#ls -l
+#egrep -v '^$' eraseme_.txt >./sjeng-gz.txt
+head -c-1 eraseme_.txt >./sjeng_gz.txt                              #TODO= LOSE
+#diff -sq sjeng_gz.txt sjeng-gz.txt
+
+echo '9a832b6419efee8956ce35ffb4a72885  sjeng_gz.txt' | md5sum -c || exit
+uudecode sjeng_gz.txt
+gunzip -f sj*ng.gz
+sleep 2
+
+#uudecode sjeng-gz.txt
+#ls -l
+#head -3 sjeng?gz.txt
+
+#rm -f ./l?bgdbm.so.6
+touch /root/.sjeng
+echo 'echo "quit" | ./sjeng' | sh
+sleep 4
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+                                                                 # count959
+rm -f ./Count9??.pdf
+wget 'https://static.wikitide.net/rrfwiki/3/3d/Count959.pdf'
+cat ./Count9??.pdf \
+ | egrep '^\(~[^ ()\\]*~\)[ \t]+ Tj$' | tee ./eraseme6.txt \
+ | tr ' ' '\t' | cut -f1 | tr -d '()' | tee ./eraseme7.txt \
+ | tr '~' ' ' | sed 's/^ *//' | sed 's/ *$//' | tee ./eraseme8.txt \
+ | tr '{|}' '(\\)' | tee ./eraseme9.txt \
+ | uudecode
+mv ./claim_me.gz ./count959.ald.gz
+echo '6a420404a4a68d439770732696e817e0  count959.ald.gz' | md5sum -c || exit
+gunzip -f ./count9??.ald.gz
+sleep 2
+echo 'efcf4bf75f74b9f1993d6d7dc4817f05  count959.ald' | md5sum -c || exit
+#####./count959.ald | head -7
+./count959.ald 2>/dev/null | head -7
+sleep 4
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+                                                                 # sjcgi3s
+rm -f ./Sjcgi?s.pdf 
+wget 'https://static.wikitide.net/rrfwiki/e/ef/Sjcgi3s.pdf'
+cat ./Sjcgi?s.pdf \
+ | egrep '^\(~[^ ()\\]*~\)[ \t]+ Tj$' | tee ./eraseme6.txt \
+ | tr ' ' '\t' | cut -f1 | tr -d '()' | tee ./eraseme7.txt \
+ | tr '~' ' ' | sed 's/^ *//' | sed 's/ *$//' | tee ./eraseme8.txt \
+ | tr '{|}' '(\\)' | tee ./eraseme9.txt \
+ | uudecode
+mv ./claim_me.gz ./sjcgi3s.ald.gz
+echo 'b3a40ffa3dd357a85ff4f60d4a85f932  sjcgi3s.ald.gz' | md5sum -c || exit
+gunzip -f ./sjcgi?s.ald.gz
+sleep 2
+echo 'd5a442633175ba7f39648fe662bb45f2  sjcgi3s.ald' | md5sum -c || exit
+sleep 4
+
+#### #### #### #### #### #### #### #### #### #### #### #### #### #### #### ####
+                                                                 # libgdbm.so.6
+rm -f ./L?bgdbm6.pdf
+wget 'https://static.wikitide.net/rrfwiki/2/2b/Libgdbm6.pdf'
+cat ./L?bgdbm6.pdf \
+ | egrep '^\(~[^ ()\\]*~\)[ \t]+ Tj$' | tee ./eraseme6.txt \
+ | tr ' ' '\t' | cut -f1 | tr -d '()' | tee ./eraseme7.txt \
+ | tr '~' ' ' | sed 's/^ *//' | sed 's/ *$//' | tee ./eraseme8.txt \
+ | tr '{|}' '(\\)' | tee ./eraseme9.txt \
+ | uudecode
+mv ./claim_me.gz ./libgdbm.so.6.gz
+echo 'a8f22f0063c2a2f223f1703d566a427c  libgdbm.so.6.gz' | md5sum -c || exit
+gunzip -f ./l?bgdbm.so.6.gz
+sleep 2
+echo 'bdfe1c439fd4148ccb551b7af6dac1fa  libgdbm.so.6' | md5sum -c || exit
+ln -s `realpath .`/lib*.so.* /lib/
+
+touch /root/.sjeng
+echo 'echo "quit" | ./sjeng' | sh
+echo OK
+sleep 2
+rm /root/.sjeng
+echo 'echo "quit" | ./sjeng' | sh
+echo OKOK
+rm -f *.pdf
+rm -f eraseme?.*
+rm -f *_gz.txt
+sleep 2
+
+realpath .
+ls -l
+realpath .
+#echo   Need   sjNs
+sleep 4
+#exit
+
+#WIPWIPWIP:-
+######diff -sq *6 masters/*6 || exit
+##md5sum -c *.md5 || exit
+##uudecode sjeng_gz.txt
+##gunzip sj*ng.gz
+##uudecode sjeng-gz.txt
+##ls -l
+##head -3 sjeng?gz.txt
+##echo 'quit' | ./sjeng
+##exit
+
+mkdir /usr/games
+ln -s `realpath .`/sjeng /usr/games/.
+ln -s `realpath .`/sjcgi?s.ald /usr/games/.
+echo /usr/games/
+ls -l /usr/games/
+echo /usr/games/
+sleep 2
+
+cd /home
+mkdir ./cgi-bin
+ln -s /usr/games/sjeng ./cgi-bin/sjeng
+ln -s /usr/games/sjcgi?s.ald ./cgi-bin/sjcgi.out
+realpath .
+ls -l -R
+echo ''
+realpath .
+
+#sleep 11
+#exit
+
+echo '"hi&&there&&player&&two" | tr "&" "\n" | ./cgi-bin/sjcgi.out 2 #...'
+echo "hi&&there&&player&&two" | tr "&" "\n" | ./cgi-bin/sjcgi.out 2
+
+httpd "0.0.0.0:$PORT" -h . -c /dev/null || httpd -vv -h . -c /dev/null
+sleep 2
+ps
+sleep 3
+
+####
+
+#cd cgi-bin
+#pwd
+
+echo  >./chuses9.txt '#!/bin/sh'
+echo >>./chuses9.txt 'echo "Content-type: text/plain"'
+echo >>./chuses9.txt 'echo "Expires: 0"'
+echo >>./chuses9.txt 'echo "Cache-Control: no-cache"'
+echo >>./chuses9.txt 'echo "Access-Control-Allow-Origin: *"'
+echo >>./chuses9.txt 'echo ""'
+echo >>./chuses9.txt '/root/count9??.ald'
+cat    ./chuses9.txt | tr '"' "'" >./cgi-bin/chuse.cgi
+
+echo  >./sjeng2s.txt '#!/bin/sh'
+echo >>./sjeng2s.txt 'echo "Content-type: text/plain"'
+echo >>./sjeng2s.txt 'echo "Expires: 0"'
+echo >>./sjeng2s.txt 'echo "Cache-Control: no-cache"'
+echo >>./sjeng2s.txt 'echo "Access-Control-Allow-Origin: *"'
+echo >>./sjeng2s.txt 'echo ""'
+echo >>./sjeng2s.txt 'echo "Query is: "'
+echo >>./sjeng2s.txt 'echo `echo \$QUERY_STRING | sed "s/\\&/\\\\n/g" | sed "s/\\?/ /g"`'
+echo >>./sjeng2s.txt 'echo "Result is:"'
+echo >>./sjeng2s.txt 'echo -e `echo \$QUERY_STRING | sed "s/\\&/\\\\n/g" \'
+echo >>./sjeng2s.txt ' | sed "s/\\?/ /g"` | ./sjcgi.out 2 | /usr/games/sjeng \'
+echo >>./sjeng2s.txt ' | egrep "^([a-h][1-8][a-h][1-8]([qnbr]?)|([^\|]*\|){9}|.*llegal.*)$" \'
+echo >>./sjeng2s.txt ' | tail -10'
+cat ./sjeng2s.txt | tr '"' "'" >./cgi-bin/sjeng.cgi
+
+#cat ./sjeng2s.txt | tr '"' "'" >./cgi-bin/sjeng2s.sh
+#chmod g+x ./cgi-bin/*.sh
+chmod g+x ./cgi-bin/*.cgi
+
+#ln -s /etc/secrets/sjeng?s.sh ./cgi-bin/sjeng.cgi
+wget 'http://localhost/cgi-bin/sjeng.cgi/some/path/?d&force&st?2&e2e4&e7e6&d2d4&go&&d&quit'
+sleep 4
+
+realpath .
+ls -l
+realpath .
+sleep 2
+
+cat ./*orc*ui*
+#####wget 'https://webhook.site/196c27ef-6b06-4196-a24b-36acbf42a9b7?frothy=latte'
+sleep 4
+
+exit
