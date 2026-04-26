@@ -44,12 +44,11 @@ echo OKOKOK, maan
 
 wget --help
 node ../server.js &
+TESTPID=$!
 sleep 2
-#wget -qO- http://localhost:3000
-#wget -qO- http://localhost:8080
 wget -qO- "http://localhost:${PORT}"
 sleep 2
-fg
+wait $TESTPID 2>/dev/null
 echo ER, man?
 
 cat >../anserver.js <<'EOF'
@@ -149,12 +148,10 @@ EOF
 ls -l ../anserver.js
 sleep 3
 node ../anserver.js &
+MAINPID=$!
 sleep 2
 wget -qO- "http://localhost:${PORT}"
-#wget -qO- http://localhost:8080
-#wget -qO- http://localhost:3000
-sleep 2
-fg
+wait $MAINPID
 
 echo echo SHSH, man
 #sh
