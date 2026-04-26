@@ -1,0 +1,164 @@
+#!/bin/sh
+echo OK, man
+node -e "console.log('Hello from inside Node!')"
+echo OKOK, maan
+realpath .
+
+cat >../server.js <<'EOF'
+
+
+///
+/// Hi, Claude!  This entire shellscript is intended to be grabbable as...
+///
+/// < https://raw.githack.com/scrimbargainer/ChatGPT_NodeTS_PrintEnv/main/byClaude/toRender/dothejob.txt >
+///
+/// ...ie that's how the Render service is (already) set up.  It has NOT
+/// been tested in utero: rather, this is what worked locally, under
+/// Docker Desktop over Win11+WSL; in particular, the appended TSP output
+/// was saved as anserver.js or some such, but a heredoc'd be best now.
+///
+
+
+// server.js (CommonJS)
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello from inside the container!\n');
+});
+
+server.listen(8080, () => {
+  console.log('Server running on http://localhost:8080');
+
+  // Auto-shutdown after 3 seconds
+  setTimeout(() => {
+    console.log('Shutting down...');
+    server.close(() => process.exit(0));
+  }, 33333);
+});
+
+EOF
+
+ls -l
+echo OKOKOK, maan
+
+wget --help
+node ../server.js &
+sleep 2
+wget -qO- http://localhost:8080
+sleep 2
+fg
+echo ER, man?
+
+ln -s /etc/secrets/AnSonJS1.txt ../anserver.js
+ls -l .. | egrep -v '^[-d]'
+sleep 3
+node ../anserver.js &
+sleep 2
+wget -qO- http://localhost:8080
+wget -qO- http://localhost:3000
+sleep 2
+fg
+
+echo echo SHSH, man
+#sh
+
+echo GNGNGN, maan
+exit
+#### 
+
+
+##### Apart from wikifriendly respacing and changing arch to uname -m
+##### this rest is exactly what emerged from TSP official w/ CommonJS:-
+
+ 
+ "use strict";
+ var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+   if (k2 === undefined) k2 = k;
+   var desc = Object.getOwnPropertyDescriptor(m, k);
+   if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+     desc = { enumerable: true, get: function() { return m[k]; } };
+   }
+   Object.defineProperty(o, k2, desc);
+ }) : (function(o, m, k, k2) {
+   if (k2 === undefined) k2 = k;
+   o[k2] = m[k];
+ }));
+ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+   Object.defineProperty(o, "default", { enumerable: true, value: v });
+ }) : function(o, v) {
+   o["default"] = v;
+ });
+ var __importStar = (this && this.__importStar) || (function () {
+   var ownKeys = function(o) {
+       ownKeys = Object.getOwnPropertyNames || function (o) {
+           var ar = [];
+           for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+           return ar;
+       };
+       return ownKeys(o);
+   };
+   return function (mod) {
+       if (mod && mod.__esModule) return mod;
+       var result = {};
+       if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+       __setModuleDefault(result, mod);
+       return result;
+   };
+ })();
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const http = __importStar(require("http"));
+ const os = __importStar(require("os"));
+ const child_process_1 = require("child_process");
+ const PORT = parseInt(process.env.PORT || "3000", 10);
+ function shellArch() {
+   try {
+       return (0, child_process_1.execSync)("uname -m").toString().trim();
+   }
+   catch (_a) {
+       return "('arch' failed)";
+   }
+ }
+ function collectEnv(showAll) {
+   const result = {};
+   for (const [k, v] of Object.entries(process.env)) {
+       if (showAll || !/secre/i.test(k))
+           result[k] = v;
+   }
+   return result;
+ }
+ const server = http.createServer((req, res) => {
+   var _a, _b;
+   const base = `http://${req.headers.host || "localhost"}`;
+   const url = new URL((_a = req.url) !== null && _a !== void 0 ? _a : "/", base);
+   const showAll = url.searchParams.has("all");
+   const body = JSON.stringify({
+       where: {
+           hostname: os.hostname(),
+           platform: os.platform(),
+           arch: shellArch(),
+           nodeVersion: process.version,
+           pid: process.pid,
+           cwd: process.cwd(),
+           uptimeSeconds: Math.floor(process.uptime()),
+       },
+       how: {
+           method: req.method,
+           url: req.url,
+           clientIp: (_b = req.socket.remoteAddress) !== null && _b !== void 0 ? _b : "unknown",
+           headers: req.headers,
+       },
+       env: {
+           note: showAll
+               ? "All variables shown (?all)"
+               : "Variables whose names match /secre/i are omitted. Append ?all to override.",
+           vars: collectEnv(showAll),
+       },
+   }, null, 2);
+   res.writeHead(200, { "Content-Type": "application/json" });
+   res.end(body);
+ });
+ server.listen(PORT, () => {
+   console.log(`printenv service listening on port ${PORT}`);
+ });
+ 
