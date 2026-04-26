@@ -34,7 +34,7 @@ server.listen(8080, () => {
   setTimeout(() => {
     console.log('Shutting down...');
     server.close(() => process.exit(0));
-  }, 33333);
+  }, 3333);
 });
 
 EOF
