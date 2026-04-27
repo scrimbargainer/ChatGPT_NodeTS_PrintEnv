@@ -31,6 +31,14 @@
  shifts the CRLF burden to the receiving system (dos2unix or equivalent)
  rather than asserting that the wiki will preserve LF-only line endings.
 
+ Priming: code in a repo carries zero indent (standard practice) and
+ may have CRLF line endings if committed from Windows.  Before use -
+ whether pasting into a wiki, running after wget from GitHack/MiraHeze,
+ or deploying - a priming step brings it to fit-for-purpose form:
+   dos2unix (or equivalent) to strip CRs
+   add indent (eg Ctrl-A Ctrl-I in Geany) for wiki monospacing
+ Priming is a property of the workflow, not a defect in the stored file.
+
 
  == Shell scripting ==
 
