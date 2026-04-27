@@ -1,0 +1,159 @@
+ ====== idiomata.txt ======
+ In-house idioms, conventions, reasonable expectations, and techniques.
+ No line is drawn between matters of style, convention, or principle:
+ all belong here.  Append as things arise; nothing is too small.
+ -EMD / Claude, April-May '26
+
+
+ == MediaWiki-friendly code ==
+
+ Indent all code by at least one space.  This strong-arms monospace
+ rendering in MediaWiki without requiring explicit markup.
+
+ Empty strings: always "" (double quotes), never '' (two apostrophes).
+ More generally, avoid any two consecutive apostrophes in code, as
+ MediaWiki interprets them as italic/bold markup.
+
+ URLs in code or comments: either break the string at the protocol colon
+ (ie "https:" on one token, "//host/path" on the next) or escape the
+ colon as &#x3A; .  Both forms survive MediaWiki's link-detection.
+
+ Shell scripts intended for wiki storage carry a .txt extension.  This
+ shifts the CRLF burden to the receiving system (dos2unix or equivalent)
+ rather than asserting that the wiki will preserve LF-only line endings.
+
+
+ == Shell scripting ==
+
+ Shebang: #!/bin/sh always, not #!/bin/bash.  Target BusyBox throughout.
+
+ Job control (fg, bg, jobs) requires an interactive shell and is absent
+ in headless environments such as Render.  Use wait $PID instead:
+   node server.js &
+   MAINPID=$!
+   ... smoke tests ...
+   wait $MAINPID   # blocks until node exits; this IS the service lifetime
+
+ sleep N calls are live-tail-log pacing aids, not defensive coding.
+ Comment them out once setup is verified; do not remove them permanently
+ until the script is considered stable.
+
+ Diagnostic sandwich around any significant step:
+   realpath .
+   ls -l
+   echo 'OK...'
+ The double realpath is intentional: confirms cwd before and after.
+
+ Checkpoint echoes (OK / OKOK / OKOKOK etc.) give the log reader a
+ clear heartbeat without requiring they parse command output.
+
+ Fatal error checks: echo 'hash  file' | md5sum -c || exit
+ Non-fatal suppression: 2>/dev/null on mkdir, ln, etc.
+
+
+ == Binary distribution via PDF ==
+
+ Binaries can be embedded in PDFs as UUencoded PostScript text, stored
+ as (~/payload/~) Tj operator strings.  Extraction pipeline:
+   egrep '^\(~[^ ()\\]*~\)[ \t]+ Tj$'  -- isolate payload lines
+   | tr ' ' '\t' | cut -f1 | tr -d '()'  -- strip PS syntax
+   | tr '~' ' ' | sed 's/^ *//' | sed 's/ *$//'  -- restore spaces
+   | tr '{|}' '(\\)'  -- restore uuencode chars special to PS
+   | uudecode
+
+ The tr '{|}'=>'(\\)' step is the tell: PostScript's special characters
+ (parens, backslash) were substituted during encoding and must be
+ restored before uudecode will accept the data.
+
+ Always MD5-check both the compressed and decompressed forms.
+
+
+ == Integrity ==
+
+ Check early, check twice (compressed + decompressed):
+   echo 'abc123  file.gz' | md5sum -c || exit
+   gunzip -f file.gz
+   echo 'def456  file'    | md5sum -c || exit
+
+ Prefer content-addressed source URLs (commit hash, not branch name)
+ for any file that is expected to be stable.  Branch-name URLs are
+ permissible during active development but should be noted as such.
+
+
+ == Render deployment ==
+
+ $PORT is injected by Render; always read it from the environment.
+ /etc/secrets is Render's secrets folder; symlink into ~ and /home
+ if the runtime needs to find secrets by relative path.
+
+ For a Node webservice deployed via a self-contained shell script:
+ - Heredoc the compiled JS into the script (single-quoted EOF so that
+   template literals and $ signs pass through unmolested).
+ - Run a short-lived smoke-test server first to confirm Node and the
+   port binding work; have it self-terminate promptly (a few seconds).
+ - Start the real server, capture its PID, run any final checks, then
+   wait $MAINPID to block the script for the lifetime of the service.
+
+
+ == TypeScript / Node ==
+
+ Default compilation target: ES2017.  Rationale: "push into the past" -
+ aim for the broadest plausible runtime compatibility as a discipline.
+
+ Module output: CommonJS for Node deployments.  ESM can wait.
+
+ Object.fromEntries is ES2019 and is NOT downcompiled by tsc (it is a
+ runtime API, not syntax sugar).  Use a plain for-of loop instead:
+   const result = {};
+   for (const [k, v] of Object.entries(src)) { result[k] = v; }
+
+ The nullish coalescing operator (??) IS syntax sugar and IS correctly
+ downcompiled by tsc when targeting ES2017; no workaround needed.
+
+ Every .ts file intended to be dropped into the official TypeScript
+ Playground (typescriptlang.org/play) must carry an opening comment
+ stating: target, module flavour, and any .d.ts companions needed
+ (with source URLs, broken at the protocol colon).  The commit message
+ is for the repo log; the file must speak for itself.
+
+ PrintEnv principle: consistency over features.  Every conditional in
+ a diagnostic endpoint is an invitation to frighten a test suite or
+ break a comparison.
+
+
+ == Security / cryptography ==
+
+ Preferred layering for capability-grounded auth:
+   Layer 3 (rare):  asymmetric signatures  -- identity and key distribution
+   Layer 2:         ECDH                   -- relationship / session establishment
+   Layer 1 (cheap): HMAC over HKDF output  -- operational capability
+
+ The "drop to layer 1" is the efficiency payoff for agreeing on
+ specificity: a shared secret purposed to a rigid, named context.
+
+ HKDF context (the info field) is a first-class versioned schema, not
+ an afterthought.  If it drifts or collides, the specificity guarantee
+ evaporates.  Treat it like an API version string.
+
+ HMAC payloads must include nonces or timestamps; replay protection is
+ not automatic.
+
+ Static ECDH does not provide forward secrecy.  If the threat model
+ calls for it, use ephemeral keys (ECDHE).
+
+
+ == Origin control (heterodoxy limit) ==
+
+ Capability strength can be proxied by extract count: the number of
+ vertical fragments of publicly GETable source code that may be
+ assembled into new code.  A single integer is crude but enforceable,
+ auditable, and sufficient for a prototype.
+
+ Pairing extract count with an origin whitelist (trusted, inspectable,
+ stable repos) shifts the risk from "arbitrary code injection" to
+ "recombination of known components" - a large reduction in uncertainty.
+
+ Commit-hash pinning in source URLs is the single highest-value
+ constraint: it gives immutability, replayability, and protection
+ against upstream drift at negligible cost.
+
