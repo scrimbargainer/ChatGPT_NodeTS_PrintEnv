@@ -7,8 +7,16 @@
 
  == MediaWiki-friendly code ==
 
- Indent all code by at least one space.  This strong-arms monospace
- rendering in MediaWiki without requiring explicit markup.
+ Indent all code by at least two spaces.  One space suffices to force
+ monospace rendering in MediaWiki, but GitHub's in-place editor enforces
+ even indentation and will fight anything less than two; two is therefore
+ the universal safe minimum.
+
+ Copy-out goal: code copied from a MediaWiki-rendered page loses one
+ space of indent, and &#x3A; entities become literal colons - but the
+ result should WORK even if it no longer fully COMPLIES.  Compliance is
+ easily restored post-copy: Ctrl-A Ctrl-I in Geany (single-space indent
+ setting) puts the indent back.
 
  Empty strings: always "" (double quotes), never '' (two apostrophes).
  More generally, avoid any two consecutive apostrophes in code, as
@@ -16,7 +24,8 @@
 
  URLs in code or comments: either break the string at the protocol colon
  (ie "https:" on one token, "//host/path" on the next) or escape the
- colon as &#x3A; .  Both forms survive MediaWiki's link-detection.
+ colon as &#x3A; .  On copy-out from MediaWiki, &#x3A; renders as a
+ plain colon, so copied URLs remain functional.
 
  Shell scripts intended for wiki storage carry a .txt extension.  This
  shifts the CRLF burden to the receiving system (dos2unix or equivalent)
